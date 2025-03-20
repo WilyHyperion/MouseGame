@@ -7,7 +7,8 @@ public class PlayerController : MonoBehaviour
     public Rigidbody rb;
     void Start()
     {
-        rb = GetComponentInChildren<Rigidbody>();
+
+        rb = GetComponent<Rigidbody>();
         instance = this;
         Movement = InputSystem.actions.FindAction("Move");
         Sprint = InputSystem.actions.FindAction("Sprint");
@@ -23,6 +24,7 @@ public class PlayerController : MonoBehaviour
     /// Magnitude of movement vector
     /// </summary>
     public float MaxSpeed =5f;
+  
     void Update()
     {
         var inputmove = Movement.ReadValue<Vector2>();
