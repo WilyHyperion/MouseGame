@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using UnityEngine;
 using UnityEngine.InputSystem;
 public enum CameraMode
@@ -14,15 +15,22 @@ public enum CameraMode
     /// <summary>
     /// For placing objects. Locked to looking down but moveable with wasd. 
     /// </summary>
-    Placement
-
+    Placement,
 }
 public class Cam : MonoBehaviour
 {
     public static Cam instance;
     public CameraMode Mode = CameraMode.PlayerFollow;
     //Placement
+    public float SprintSpeedBonus = 3f;
+    float lerpProgress = 0f;
+    Quaternion lerpStartRot;
+    Vector3 lerpStart;
+    public float LerpTime;
+    public Vector3 LerpGoal;
+    public Quaternion LerpGoalRot;
     InputAction movement;
+    public InputAction Sprint;
     public float CamMoveSpeed;
     public float Dist;
     public float MinDist;
@@ -38,10 +46,14 @@ public class Cam : MonoBehaviour
         Look = InputSystem.actions.FindAction("Look");
         rot = new Vector3();
         Zoom = InputSystem.actions.FindAction("Zoom");
+
+        Sprint = InputSystem.actions.FindAction("Sprint");
     }
     //PlayerFollow
     InputAction Look;
      InputAction Zoom;
+
+
     public float MaxFollowDistance;
     public float FollowDistance;
     public Vector3 rot;
@@ -78,12 +90,21 @@ public class Cam : MonoBehaviour
                 transform.position = FixedPoint;
                 break;
             case CameraMode.Placement:
-                Vector3 setval = this.transform.position + (movement.ReadValue<Vector2>().ToXZVector3() * CamMoveSpeed * Time.deltaTime);
-                this.transform.forward = -Vector3.up;
-                Dist -= Zoom.ReadValue<float>();
-                Dist = Mathf.Clamp(Dist, MinDist, MaxDist);
-                setval.y = BaseY + Dist;
-                this.transform.position = setval;
+                if (lerpProgress < LerpTime)
+                {
+                    lerpProgress += Time.deltaTime;
+                    this.transform.position = Vector3.Lerp(lerpStart, LerpGoal, lerpProgress / LerpTime);
+                    this.transform.rotation = Quaternion.Lerp(lerpStartRot, LerpGoalRot, lerpProgress / LerpTime);
+                }
+                else
+                {
+                    Vector3 setval = this.transform.position + (movement.ReadValue<Vector2>().ToXZVector3() * CamMoveSpeed * Time.deltaTime * ((Sprint.triggered) ? SprintSpeedBonus : 1));
+                    this.transform.forward = -Vector3.up;
+                    Dist -= Zoom.ReadValue<float>();
+                    Dist = Mathf.Clamp(Dist, MinDist, MaxDist);
+                    setval.y = BaseY + Dist;
+                    this.transform.position = setval;
+                }
                 break;
             default:
                 Debug.LogWarning("Unknown/unimplemented cam type");
@@ -94,6 +115,30 @@ public class Cam : MonoBehaviour
 
     public void TogglePlacement(CameraMode other = CameraMode.PlayerFollow)
     {
-        this.Mode = Mode == CameraMode.Placement ? other : CameraMode.Placement; 
+        this.Mode = (Mode == CameraMode.Placement) ? other : CameraMode.Placement; 
+        if(this.Mode == CameraMode.Placement)
+        {
+            lerpStartRot = this.transform.rotation;
+            lerpStart = this.transform.position;
+            lerpProgress = 0f;
+            LerpGoal = this.transform.position;
+            LerpGoal.y =BaseY + Dist;
+            LerpGoalRot = Quaternion.Euler(90, 0, 0);
+        }
     }
+    public static bool InPlaceMode
+    {
+        get
+        {
+            return (instance.Mode == CameraMode.Placement);
+        }
+        set
+        {
+            if (InPlaceMode != value)
+            {
+                instance.TogglePlacement();
+            }
+        }
+    }
+
 }

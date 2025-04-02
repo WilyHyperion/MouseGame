@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
             {
                 rb.AddForce(move, ForceMode.Acceleration);
             }
-        }
+        } 
         //testing
         if (Input.GetKeyDown(KeyCode.B))
         {
@@ -44,4 +44,5 @@ public class PlayerController : MonoBehaviour
             this.Locked = !Locked;
         }
     }
+    
 }

@@ -4,5 +4,6 @@ using UnityEngine;
 public class GridItem : ScriptableObject
 {
     public string Name;
-
+    //pretty garbage name ngl but too scared to refactor
+    public GameObject Placed;
 }
