@@ -548,7 +548,7 @@ MonoBehaviour:
   GridSize: 4
   meshRenderer: {fileID: 0}
   meshFilter: {fileID: 0}
-  TestPlacer: {fileID: 11400000, guid: 1cc364d1f182e314b84d8297588ce160, type: 2}
+  TestPlacer: {fileID: 11400000, guid: 83d90faf51a5fd54189801637144527e, type: 2}
   TestPlacer2: {fileID: 11400000, guid: 123fe0867d9afa448b372eff95089d11, type: 2}
   cam: {fileID: 330585545}
 --- !u!23 &1562789987

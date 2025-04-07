@@ -16,12 +16,25 @@ public class GridManager : MonoBehaviour
     public MeshFilter meshFilter;
     void Start()
     {
-
         col = GetComponent<Collider>();
+
         int numCells = (int)(col.bounds.size.x / GridSize);
         Grid = new GridItem[numCells, numCells];
         meshFilter = gameObject.AddComponent<MeshFilter>();
         meshRenderer = GetComponent<MeshRenderer>();
+
+        meshRenderer.material = new Material(Shader.Find("Sprites/Default"));
+        meshRenderer.material.color = Color.green;
+        meshFilter.mesh = genMesh();
+
+    }
+    Mesh genMesh()
+    {
+        if(col == null)
+        {
+            col = GetComponent<Collider>();
+        }
+        int numCells = (int)(col.bounds.size.x / GridSize);
         Vector3 offset = col.bounds.extents;
         var gridmesh = new Mesh();
         List<Vector3> vecs = new List<Vector3>();
@@ -40,9 +53,7 @@ public class GridManager : MonoBehaviour
 
         gridmesh.vertices = vecs.ToArray();
         gridmesh.SetIndices(Lines.ToArray(), MeshTopology.Lines, 0);
-        meshRenderer.material = new Material(Shader.Find("Sprites/Default"));
-        meshRenderer.material.color = Color.green;
-        meshFilter.mesh = gridmesh;
+        return gridmesh;
     }
     public GridItem TestPlacer;
 
@@ -94,7 +105,12 @@ public class GridManager : MonoBehaviour
         }
         Grid[index.Item1, index.Item2] = place;
         //TODO rotation
-        Instantiate(place.Placed, IndexToWorld(index), transform.rotation, transform );
+        var placed = Instantiate(place.Placed, IndexToWorld(index), transform.rotation, transform );
+        var s = placed.GetComponent<Station>();
+        if (s != null)
+        {
+            s.GridIndex = index;
+        }
 
     }
     public Vector3 IndexToWorld((int, int) index)
@@ -121,6 +137,10 @@ public class GridManager : MonoBehaviour
             }
         }
         return false;
+    }
+    public void OnDrawGizmos()
+    {
+        //TODO draw the mesh in editor
     }
     public GridItem[,] Grid;
 }

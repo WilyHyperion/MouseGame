@@ -1,2 +1,16 @@
 fileFormatVersion: 2
 guid: 254431ecdd4581e42b37298f6b00d08f
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - meshRenderer: {instanceID: 0}
+  - meshFilter: {instanceID: 0}
+  - TestPlacer: {fileID: 11400000, guid: 83d90faf51a5fd54189801637144527e, type: 2}
+  - TestPlacer2: {instanceID: 0}
+  - cam: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
