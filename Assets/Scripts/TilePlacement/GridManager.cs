@@ -57,7 +57,7 @@ public class GridManager : MonoBehaviour
     }
     public GridItem TestPlacer;
 
-    public GridItem TestPlacer2;
+    public int PlacedRot;
     void Update()
     {
         meshRenderer.forceRenderingOff = !Cam.InPlaceMode;
@@ -73,16 +73,13 @@ public class GridManager : MonoBehaviour
             }
             if (Input.GetMouseButtonDown(1))
             {
-                (int, int) index;
-                if (GetMouseHoverIndex(out index))
-                {
-                    TryPlaceIn(index, TestPlacer2);
-                }
+                PlacedRot = (PlacedRot + 1) %4;
             } 
         }
     }
     /// <summary>
     /// Places an object into the grid as long as no object exists at that location currently
+    /// defaults to calculating rotation for PlacedRot
     /// </summary>
     /// <param name="index"></param>
     /// <param name="tryPlace"></param>
@@ -91,13 +88,22 @@ public class GridManager : MonoBehaviour
     {
         if (Grid[index.Item1, index.Item2] == null)
         {
-            ForcePlaceGridItem(index, tryPlace);
+            ForcePlaceGridItem(index, tryPlace, Quaternion.Euler(new Vector3(0, PlacedRot * 90, 0)));
+            return true;
+        }
+        return false;
+    }
+    public bool TryPlaceIn((int, int) index, GridItem tryPlace, Quaternion rotation)
+    {
+        if (Grid[index.Item1, index.Item2] == null)
+        {
+            ForcePlaceGridItem(index, tryPlace, rotation);
             return true;
         }
         return false;
     }
 
-    public void ForcePlaceGridItem((int, int) index, GridItem place)
+    public void ForcePlaceGridItem((int, int) index, GridItem place, Quaternion rotation)
     {
         if (Grid[index.Item1, index.Item2] != null)
         {
@@ -105,7 +111,7 @@ public class GridManager : MonoBehaviour
         }
         Grid[index.Item1, index.Item2] = place;
         //TODO rotation
-        var placed = Instantiate(place.Placed, IndexToWorld(index), transform.rotation, transform );
+        var placed = Instantiate(place.Placed, IndexToWorld(index), rotation, transform );
         var s = placed.GetComponent<Station>();
         if (s != null)
         {

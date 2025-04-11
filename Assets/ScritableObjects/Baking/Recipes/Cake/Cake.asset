@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcf55478e4784b942a307e463feda1d6, type: 3}
   m_Name: Cake
   m_EditorClassIdentifier: 
+  Sprite: {fileID: 21300000, guid: f34aead4b79684941a2a67b295bb75a7, type: 3}
   parts:
   - amount: 2
     type: Eggs
@@ -20,3 +21,4 @@ MonoBehaviour:
   - amount: 1
     type: Sugar
   DisplayName: 
+  Result: {fileID: 0}

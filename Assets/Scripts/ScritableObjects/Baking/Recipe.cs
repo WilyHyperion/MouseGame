@@ -5,6 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Recipe", menuName = "Baking/Recipe")]
 public class Recipe : ScriptableObject
 {
+
+    public Sprite Sprite;
     [SerializeField]
     public List<RecipePart> parts = new List<RecipePart>();
     public string DisplayName;

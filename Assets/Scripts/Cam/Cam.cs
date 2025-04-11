@@ -70,7 +70,7 @@ public class Cam : MonoBehaviour
         {
             case CameraMode.PlayerFollow:
                 float change = Zoom.ReadValue<float>();
-                Debug.Log(change);
+
                 if ((change > 0 && FollowDistance < MaxFollowDistance) || (change < 0 && FollowDistance > 0))
                 {
                     FollowDistance += change;
